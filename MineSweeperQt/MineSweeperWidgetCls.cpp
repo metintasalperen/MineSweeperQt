@@ -82,7 +82,7 @@ void MineSweeperWidgetCls::createCells()
     }
     else if (selectedDifficulty == Difficulty_Hard)
     {
-        cellCount == HARD_ROW * HARD_COL;
+        cellCount = HARD_ROW * HARD_COL;
         row = HARD_ROW;
         col = HARD_COL;
         this->setFixedSize(QSize(HARD_COL * CELL_SIZE_X, (HARD_ROW + 1) * CELL_SIZE_Y));
@@ -101,14 +101,14 @@ void MineSweeperWidgetCls::createCells()
         cell->setPixmap(pix);
 
         // Set coordinate
-        QPoint point((i % col) * CELL_SIZE_X, (i / row) * CELL_SIZE_Y + CELL_SIZE_Y);
+        QPoint point((i % col) * CELL_SIZE_X, (i / col) * CELL_SIZE_Y + CELL_SIZE_Y);
         cell->setGeometry(QRect(point, QSize(CELL_SIZE_X, CELL_SIZE_Y)));
 
         // Set visibility
         cell->setVisible(true);
 
         // Set row and col data
-        cell->row = i / row;
+        cell->row = i / col;
         cell->col = i % col;
 
         // Save cell address
