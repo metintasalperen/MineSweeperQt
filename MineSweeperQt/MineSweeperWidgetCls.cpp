@@ -12,7 +12,7 @@ MineSweeperWidgetCls::MineSweeperWidgetCls(QWidget* parent)
 
     // Initialize data
     selectedDifficulty = Difficulty_NotSelected;
-    cellArr = nullptr;
+    cellArr = Q_NULLPTR;
     mineCount = 0;
 
 
@@ -53,6 +53,11 @@ MineSweeperWidgetCls::MineSweeperWidgetCls(QWidget* parent)
 
 MineSweeperWidgetCls::~MineSweeperWidgetCls()
 {
+    if (cellArr != Q_NULLPTR)
+    {
+        destroyCells();
+    }
+
     delete ui;
 }
 
@@ -62,7 +67,7 @@ void MineSweeperWidgetCls::createCells()
     {
         mineCount = 9 * 9;
 
-        cellArr = new QLabel * [mineCount];
+        cellArr = new ClickableLabel * [mineCount];
 
         QPixmap pix = QPixmap(":/tiles/tiles/unopened.png");
 
@@ -70,7 +75,7 @@ void MineSweeperWidgetCls::createCells()
         for (qint32 i = 0; i < mineCount; i++)
         {
             // Create new cell
-            QLabel* cell = new QLabel(this);
+            ClickableLabel* cell = new ClickableLabel(this);
 
             // Set unopened cell picture
             cell->setPixmap(pix);
@@ -87,7 +92,32 @@ void MineSweeperWidgetCls::createCells()
         }
 
         this->setFixedSize(QSize(9 * CELL_SIZE_X, 10 * CELL_SIZE_Y));
+
+        // Set up event handlers for cells
+        for (qint32 i = 0; i < mineCount; i++)
+        {
+            connect(cellArr[i], SIGNAL(leftClicked()), this, SLOT(handleCellLeftClicked()));
+            connect(cellArr[i], SIGNAL(rightClicked()), this, SLOT(handleCellRightClicked()));
+        }
     }
+}
+
+void MineSweeperWidgetCls::handleCellLeftClicked()
+{
+    QPixmap pix = QPixmap(":/tiles/tiles/openedEmpty.png");
+
+    ClickableLabel *cell = qobject_cast<ClickableLabel*>(sender());
+
+    cell->setPixmap(pix);
+}
+
+void MineSweeperWidgetCls::handleCellRightClicked()
+{
+    QPixmap pix = QPixmap(":/tiles/tiles/flagged.png");
+
+    ClickableLabel* cell = qobject_cast<ClickableLabel*>(sender());
+
+    cell->setPixmap(pix);
 }
 
 void MineSweeperWidgetCls::destroyCells()
@@ -100,7 +130,7 @@ void MineSweeperWidgetCls::destroyCells()
 
     delete[] cellArr;
 
-    cellArr = nullptr;
+    cellArr = Q_NULLPTR;
 
     mineCount = 0;
 }
@@ -118,7 +148,7 @@ void MineSweeperWidgetCls::handlePopupClicked(QListWidgetItem* item)
 
             popup->setVisible(false);
 
-            if (cellArr != nullptr)
+            if (cellArr != Q_NULLPTR)
             {
                 destroyCells();
             }

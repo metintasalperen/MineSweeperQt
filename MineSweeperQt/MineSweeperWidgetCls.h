@@ -3,6 +3,7 @@
 
 #include "EnumPkg.h"
 #include "ConstPkg.h"
+#include "ClickableLabel.h"
 
 #include <QWidget>
 #include <QCheckBox>
@@ -25,6 +26,8 @@ private slots:
     void handleStartButtonPressed();
     void handleStartButtonReleased();
     void handlePopupClicked(QListWidgetItem* item);
+    void handleCellLeftClicked();
+    void handleCellRightClicked();
 
 private:
     Ui::MineSweeperWidgetCls* ui;
@@ -36,7 +39,7 @@ protected:
     void resizeEvent(QResizeEvent* event);
     void moveEvent(QMoveEvent* event);
 
-    QLabel** cellArr;
+    ClickableLabel** cellArr;
 
 public:
     DifficultyEnum selectedDifficulty;
