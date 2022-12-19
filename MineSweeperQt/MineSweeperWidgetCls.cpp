@@ -65,7 +65,7 @@ void MineSweeperWidgetCls::createCells()
 {
     if (selectedDifficulty == Difficulty_Easy)
     {
-        mineCount = 9 * 9;
+        mineCount = EASY_ROW * EASY_COL;
 
         cellArr = new ClickableLabel * [mineCount];
 
@@ -81,7 +81,7 @@ void MineSweeperWidgetCls::createCells()
             cell->setPixmap(pix);
 
             // Set coordinate
-            QPoint point((i % 9) * CELL_SIZE_X, (i / 9) * CELL_SIZE_Y + 30);
+            QPoint point((i % EASY_COL) * CELL_SIZE_X, (i / EASY_ROW) * CELL_SIZE_Y + CELL_SIZE_Y);
             cell->setGeometry(QRect(point, QSize(CELL_SIZE_X, CELL_SIZE_Y)));
 
             // Set visibility
@@ -89,22 +89,19 @@ void MineSweeperWidgetCls::createCells()
 
             // Save cell address
             cellArr[i] = cell;
-        }
 
-        this->setFixedSize(QSize(9 * CELL_SIZE_X, 10 * CELL_SIZE_Y));
-
-        // Set up event handlers for cells
-        for (qint32 i = 0; i < mineCount; i++)
-        {
+            // Set up event handlers for cells
             connect(cellArr[i], SIGNAL(leftClicked()), this, SLOT(handleCellLeftClicked()));
             connect(cellArr[i], SIGNAL(rightClicked()), this, SLOT(handleCellRightClicked()));
         }
+
+        this->setFixedSize(QSize(EASY_COL * CELL_SIZE_X, (EASY_ROW + 1) * CELL_SIZE_Y));
     }
 }
 
 void MineSweeperWidgetCls::handleCellLeftClicked()
 {
-    QPixmap pix = QPixmap(":/tiles/tiles/openedEmpty.png");
+    QPixmap pix = QPixmap(TILE_OPENED_EMPTY);
 
     ClickableLabel *cell = qobject_cast<ClickableLabel*>(sender());
 
@@ -113,7 +110,7 @@ void MineSweeperWidgetCls::handleCellLeftClicked()
 
 void MineSweeperWidgetCls::handleCellRightClicked()
 {
-    QPixmap pix = QPixmap(":/tiles/tiles/flagged.png");
+    QPixmap pix = QPixmap(TILE_FLAGGED);
 
     ClickableLabel* cell = qobject_cast<ClickableLabel*>(sender());
 
@@ -190,13 +187,13 @@ void MineSweeperWidgetCls::handlePopupClicked(QListWidgetItem* item)
 
 void MineSweeperWidgetCls::handleStartButtonPressed()
 {
-    QIcon icon = QIcon(":/faces/faces/onClicked.png");
+    QIcon icon = QIcon(FACE_ON_CLICKED);
     ui->startButton->setIcon(icon);
 }
 
 void MineSweeperWidgetCls::handleStartButtonReleased()
 {
-    QIcon icon = QIcon(":/faces/faces/main.png");
+    QIcon icon = QIcon(FACE_MAIN);
     ui->startButton->setIcon(icon);
 
     popup->setVisible(true);
