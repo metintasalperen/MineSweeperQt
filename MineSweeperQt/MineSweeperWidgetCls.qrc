@@ -1,4 +1,35 @@
 <RCC>
-    <qresource prefix="MineSweeperWidgetCls">
+    <qresource prefix="/tiles">
+        <file>tiles/1.png</file>
+        <file>tiles/2.png</file>
+        <file>tiles/3.png</file>
+        <file>tiles/4.png</file>
+        <file>tiles/5.png</file>
+        <file>tiles/6.png</file>
+        <file>tiles/7.png</file>
+        <file>tiles/8.png</file>
+        <file>tiles/bomb.png</file>
+        <file>tiles/flagged.png</file>
+        <file>tiles/openedEmpty.png</file>
+        <file>tiles/tiles.jpg</file>
+        <file>tiles/unopened.png</file>
+    </qresource>
+    <qresource prefix="/numbers">
+        <file>numbers/0.png</file>
+        <file>numbers/1.png</file>
+        <file>numbers/2.png</file>
+        <file>numbers/3.png</file>
+        <file>numbers/4.png</file>
+        <file>numbers/5.png</file>
+        <file>numbers/6.png</file>
+        <file>numbers/7.png</file>
+        <file>numbers/8.png</file>
+        <file>numbers/9.png</file>
+    </qresource>
+    <qresource prefix="/faces">
+        <file>faces/lose.png</file>
+        <file>faces/main.png</file>
+        <file>faces/onClicked.png</file>
+        <file>faces/win.png</file>
     </qresource>
 </RCC>

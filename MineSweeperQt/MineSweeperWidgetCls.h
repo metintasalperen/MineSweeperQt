@@ -1,16 +1,49 @@
-#pragma once
+#ifndef MINESWEEPERWIDGETCLS_H
+#define MINESWEEPERWIDGETCLS_H
 
-#include <QtWidgets/QWidget>
-#include "ui_MineSweeperWidgetCls.h"
+#include "EnumPkg.h"
+#include "ConstPkg.h"
+
+#include <QWidget>
+#include <QCheckBox>
+#include <QLabel>
+#include <QListWidget>
+
+QT_BEGIN_NAMESPACE
+namespace Ui { class MineSweeperWidgetCls; }
+QT_END_NAMESPACE
 
 class MineSweeperWidgetCls : public QWidget
 {
     Q_OBJECT
 
 public:
-    MineSweeperWidgetCls(QWidget *parent = nullptr);
+    MineSweeperWidgetCls(QWidget* parent = nullptr);
     ~MineSweeperWidgetCls();
 
+private slots:
+    void handleStartButtonPressed();
+    void handleStartButtonReleased();
+    void handlePopupClicked(QListWidgetItem* item);
+
 private:
-    Ui::MineSweeperWidgetClsClass ui;
+    Ui::MineSweeperWidgetCls* ui;
+
+protected:
+    QListWidget* popup;
+
+    void adjustPopup();
+    void resizeEvent(QResizeEvent* event);
+    void moveEvent(QMoveEvent* event);
+
+    QLabel** cellArr;
+
+public:
+    DifficultyEnum selectedDifficulty;
+    qint32 mineCount;
+
+private:
+    void createCells();
+    void destroyCells();
 };
+#endif // MINESWEEPERWIDGETCLS_H
