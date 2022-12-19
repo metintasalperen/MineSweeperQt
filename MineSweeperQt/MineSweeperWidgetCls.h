@@ -4,6 +4,7 @@
 #include "EnumPkg.h"
 #include "ConstPkg.h"
 #include "ClickableLabel.h"
+#include "MineSweeperCls.h"
 
 #include <QWidget>
 #include <QCheckBox>
@@ -44,6 +45,7 @@ protected:
 public:
     DifficultyEnum selectedDifficulty;
     qint32 mineCount;
+    MineSweeperCls* mineSweeperObj;
 
 private:
     void createCells();

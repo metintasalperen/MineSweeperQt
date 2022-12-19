@@ -14,6 +14,7 @@ MineSweeperWidgetCls::MineSweeperWidgetCls(QWidget* parent)
     selectedDifficulty = Difficulty_NotSelected;
     cellArr = Q_NULLPTR;
     mineCount = 0;
+    mineSweeperObj = new MineSweeperCls();
 
 
     // Initializing game settings popup
@@ -106,6 +107,8 @@ void MineSweeperWidgetCls::handleCellLeftClicked()
     ClickableLabel *cell = qobject_cast<ClickableLabel*>(sender());
 
     cell->setPixmap(pix);
+
+    //mineSweeperObj->ProcessUserInput()
 }
 
 void MineSweeperWidgetCls::handleCellRightClicked()
@@ -151,6 +154,8 @@ void MineSweeperWidgetCls::handlePopupClicked(QListWidgetItem* item)
             }
 
             createCells();
+
+            mineSweeperObj->SetOptions(EASY_ROW, EASY_COL, EASY_MINE_COUNT);
         }
     }
     else if (item->text() == EASY_CHECKBOX_TEXT)

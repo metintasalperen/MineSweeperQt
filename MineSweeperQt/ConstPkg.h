@@ -14,12 +14,20 @@ const qint32 CELL_SIZE_X = 30;
 const qint32 CELL_SIZE_Y = 30;
 
 // Game settings
+// Easy
 const qint32 EASY_ROW = 9;
 const qint32 EASY_COL = 9;
+const qint32 EASY_MINE_COUNT = 10;
+
+// Medium
 const qint32 MEDIUM_ROW = 16;
 const qint32 MEDIUM_COL = 16;
+const qint32 MEDIUM_MINE_COUNT = 40;
+
+// Hard
 const qint32 HARD_ROW = 16;
 const qint32 HARD_COL = 16;
+const qint32 HARD_MINE_COUNT = 99;
 
 // Assets
 // Faces
