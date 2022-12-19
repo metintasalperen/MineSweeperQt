@@ -44,7 +44,7 @@ protected:
 
 public:
     DifficultyEnum selectedDifficulty;
-    qint32 mineCount;
+    qint32 cellCount;
     MineSweeperCls* mineSweeperObj;
 
 private:

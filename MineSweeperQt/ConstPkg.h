@@ -26,7 +26,7 @@ const qint32 MEDIUM_MINE_COUNT = 40;
 
 // Hard
 const qint32 HARD_ROW = 16;
-const qint32 HARD_COL = 16;
+const qint32 HARD_COL = 30;
 const qint32 HARD_MINE_COUNT = 99;
 
 // Assets

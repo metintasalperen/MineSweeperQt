@@ -13,7 +13,7 @@ MineSweeperWidgetCls::MineSweeperWidgetCls(QWidget* parent)
     // Initialize data
     selectedDifficulty = Difficulty_NotSelected;
     cellArr = Q_NULLPTR;
-    mineCount = 0;
+    cellCount = 0;
     mineSweeperObj = new MineSweeperCls();
 
 
@@ -64,43 +64,59 @@ MineSweeperWidgetCls::~MineSweeperWidgetCls()
 
 void MineSweeperWidgetCls::createCells()
 {
+    qint32 row = 0;
+    qint32 col = 0;
     if (selectedDifficulty == Difficulty_Easy)
     {
-        mineCount = EASY_ROW * EASY_COL;
-
-        cellArr = new ClickableLabel * [mineCount];
-
-        QPixmap pix = QPixmap(":/tiles/tiles/unopened.png");
-
-
-        for (qint32 i = 0; i < mineCount; i++)
-        {
-            // Create new cell
-            ClickableLabel* cell = new ClickableLabel(this);
-
-            // Set unopened cell picture
-            cell->setPixmap(pix);
-
-            // Set coordinate
-            QPoint point((i % EASY_COL) * CELL_SIZE_X, (i / EASY_ROW) * CELL_SIZE_Y + CELL_SIZE_Y);
-            cell->setGeometry(QRect(point, QSize(CELL_SIZE_X, CELL_SIZE_Y)));
-
-            // Set visibility
-            cell->setVisible(true);
-
-            // Set row and col data
-            cell->row = i / EASY_ROW;
-            cell->col = i % EASY_COL;
-
-            // Save cell address
-            cellArr[i] = cell;
-
-            // Set up event handlers for cells
-            connect(cellArr[i], SIGNAL(leftClicked()), this, SLOT(handleCellLeftClicked()));
-            connect(cellArr[i], SIGNAL(rightClicked()), this, SLOT(handleCellRightClicked()));
-        }
-
+        cellCount = EASY_ROW * EASY_COL;
+        row = EASY_ROW;
+        col = EASY_COL;
         this->setFixedSize(QSize(EASY_COL * CELL_SIZE_X, (EASY_ROW + 1) * CELL_SIZE_Y));
+    }
+    else if (selectedDifficulty == Difficulty_Medium)
+    {
+        cellCount = MEDIUM_ROW * MEDIUM_COL;
+        row = MEDIUM_ROW;
+        col = MEDIUM_COL;
+        this->setFixedSize(QSize(MEDIUM_COL * CELL_SIZE_X, (MEDIUM_ROW + 1) * CELL_SIZE_Y));
+    }
+    else if (selectedDifficulty == Difficulty_Hard)
+    {
+        cellCount == HARD_ROW * HARD_COL;
+        row = HARD_ROW;
+        col = HARD_COL;
+        this->setFixedSize(QSize(HARD_COL * CELL_SIZE_X, (HARD_ROW + 1) * CELL_SIZE_Y));
+    }
+
+    cellArr = new ClickableLabel * [cellCount];
+
+    QPixmap pix = QPixmap(":/tiles/tiles/unopened.png");
+
+    for (qint32 i = 0; i < cellCount; i++)
+    {
+        // Create new cell
+        ClickableLabel* cell = new ClickableLabel(this);
+
+        // Set unopened cell picture
+        cell->setPixmap(pix);
+
+        // Set coordinate
+        QPoint point((i % col) * CELL_SIZE_X, (i / row) * CELL_SIZE_Y + CELL_SIZE_Y);
+        cell->setGeometry(QRect(point, QSize(CELL_SIZE_X, CELL_SIZE_Y)));
+
+        // Set visibility
+        cell->setVisible(true);
+
+        // Set row and col data
+        cell->row = i / row;
+        cell->col = i % col;
+
+        // Save cell address
+        cellArr[i] = cell;
+
+        // Set up event handlers for cells
+        connect(cellArr[i], SIGNAL(leftClicked()), this, SLOT(handleCellLeftClicked()));
+        connect(cellArr[i], SIGNAL(rightClicked()), this, SLOT(handleCellRightClicked()));
     }
 }
 
@@ -119,9 +135,27 @@ void MineSweeperWidgetCls::processMineField()
     const QPixmap seven = QPixmap(TILE_SEVEN);
     const QPixmap eight = QPixmap(TILE_EIGHT);
 
-    for (qint32 row = 0; row < EASY_ROW; row++)
+    qint32 rowLimit = 0;
+    qint32 colLimit = 0;
+    if (selectedDifficulty == Difficulty_Easy)
     {
-        for (qint32 col = 0; col < EASY_COL; col++)
+        rowLimit = EASY_ROW;
+        colLimit = EASY_COL;
+    }
+    else if (selectedDifficulty == Difficulty_Medium)
+    {
+        rowLimit = MEDIUM_ROW;
+        colLimit = MEDIUM_COL;
+    }
+    else if (selectedDifficulty == Difficulty_Hard)
+    {
+        rowLimit = HARD_ROW;
+        colLimit = HARD_COL;
+    }
+
+    for (qint32 row = 0; row < rowLimit; row++)
+    {
+        for (qint32 col = 0; col < colLimit; col++)
         {
             qint32 index = mineSweeperObj->CalculateIndex(row, col);
 
@@ -216,7 +250,7 @@ void MineSweeperWidgetCls::handleCellRightClicked()
 
 void MineSweeperWidgetCls::destroyCells()
 {
-    for (qint32 i = 0; i < mineCount; i++)
+    for (qint32 i = 0; i < cellCount; i++)
     {
         QLabel* cell = cellArr[i];
         delete cell;
@@ -226,7 +260,7 @@ void MineSweeperWidgetCls::destroyCells()
 
     cellArr = Q_NULLPTR;
 
-    mineCount = 0;
+    cellCount = 0;
 }
 
 void MineSweeperWidgetCls::handlePopupClicked(QListWidgetItem* item)
@@ -250,7 +284,19 @@ void MineSweeperWidgetCls::handlePopupClicked(QListWidgetItem* item)
 
             createCells();
 
-            mineSweeperObj->SetOptions(EASY_ROW, EASY_COL, EASY_MINE_COUNT);
+            if (selectedDifficulty == Difficulty_Easy)
+            {
+                mineSweeperObj->SetOptions(EASY_ROW, EASY_COL, EASY_MINE_COUNT);
+            }
+            else if (selectedDifficulty == Difficulty_Medium)
+            {
+                mineSweeperObj->SetOptions(MEDIUM_ROW, MEDIUM_COL, MEDIUM_MINE_COUNT);
+            }
+            else if (selectedDifficulty == Difficulty_Hard)
+            {
+                mineSweeperObj->SetOptions(HARD_ROW, HARD_COL, HARD_MINE_COUNT);
+            }
+            
         }
     }
     else if (item->text() == EASY_CHECKBOX_TEXT)
