@@ -6,8 +6,8 @@
 
 struct TileStc
 {
-	MineStatusEnum MineStatus;
-	TileStatusEnum TileStatus;
+    MineStatusEnum MineStatus;
+    TileStatusEnum TileStatus;
 };
 
 #endif // STRUCTPKG_H

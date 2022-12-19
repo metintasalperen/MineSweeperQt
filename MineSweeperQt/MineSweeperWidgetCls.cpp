@@ -104,7 +104,7 @@ void MineSweeperWidgetCls::handleCellLeftClicked()
 {
     QPixmap pix = QPixmap(TILE_OPENED_EMPTY);
 
-    ClickableLabel *cell = qobject_cast<ClickableLabel*>(sender());
+    ClickableLabel* cell = qobject_cast<ClickableLabel*>(sender());
 
     cell->setPixmap(pix);
 
