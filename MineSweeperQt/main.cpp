@@ -5,6 +5,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MineSweeperWidgetCls w;
+    w.setWindowTitle("Mine Sweeper");
     w.show();
     return a.exec();
 }

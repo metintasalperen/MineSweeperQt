@@ -686,6 +686,11 @@ MineSweeperCls::MineSweeperCls()
     MineField = nullptr;
 };
 
+MineSweeperCls::~MineSweeperCls()
+{
+    DestroyMineField();
+}
+
 ResultEnum MineSweeperCls::SetOptions(unsigned int row, unsigned int column, unsigned int mineCount)
 {
     MaxRow = row;
@@ -756,28 +761,20 @@ GameStatusEnum MineSweeperCls::ProcessUserInput(unsigned int row, unsigned int c
 
     if (userAction == UserAction_Flag)
     {
-        FlagCell(row - 1, column - 1);
+        FlagCell(row , column);
     }
     else if (userAction == UserAction_Open)
     {
         if (FirstInput == true)
         {
             FirstInput = false;
-            PlaceMines(row - 1, column - 1);
+            PlaceMines(row, column);
         }
 
-        OpenCell(row - 1, column - 1, true);
+        OpenCell(row, column, true);
     }
 
     GameState = CheckGameStatus();
-    if (GameState == GameStatus_Lose)
-    {
-        DestroyMineField();
-    }
-    else if (GameState == GameStatus_Win)
-    {
-        DestroyMineField();
-    }
 
     return GameState;
 };

@@ -50,5 +50,6 @@ public:
 private:
     void createCells();
     void destroyCells();
+    void processMineField();
 };
 #endif // MINESWEEPERWIDGETCLS_H

@@ -12,6 +12,9 @@ public:
     explicit ClickableLabel(QWidget* parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
     ~ClickableLabel();
 
+    qint32 row;
+    qint32 col;
+
 signals:
     void leftClicked();
     void rightClicked();

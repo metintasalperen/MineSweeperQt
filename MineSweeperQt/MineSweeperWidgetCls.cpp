@@ -88,6 +88,10 @@ void MineSweeperWidgetCls::createCells()
             // Set visibility
             cell->setVisible(true);
 
+            // Set row and col data
+            cell->row = i / EASY_ROW;
+            cell->col = i % EASY_COL;
+
             // Save cell address
             cellArr[i] = cell;
 
@@ -100,24 +104,114 @@ void MineSweeperWidgetCls::createCells()
     }
 }
 
+void MineSweeperWidgetCls::processMineField()
+{
+    const QPixmap flagged = QPixmap(TILE_FLAGGED);
+    const QPixmap openedEmpty = QPixmap(TILE_OPENED_EMPTY);
+    const QPixmap bomb = QPixmap(TILE_BOMB);
+    const QPixmap unopened = QPixmap(TILE_UNOPENED);
+    const QPixmap one = QPixmap(TILE_ONE);
+    const QPixmap two = QPixmap(TILE_TWO);
+    const QPixmap three = QPixmap(TILE_THREE);
+    const QPixmap four = QPixmap(TILE_FOUR);
+    const QPixmap five = QPixmap(TILE_FIVE);
+    const QPixmap six = QPixmap(TILE_SIX);
+    const QPixmap seven = QPixmap(TILE_SEVEN);
+    const QPixmap eight = QPixmap(TILE_EIGHT);
+
+    for (qint32 row = 0; row < EASY_ROW; row++)
+    {
+        for (qint32 col = 0; col < EASY_COL; col++)
+        {
+            qint32 index = mineSweeperObj->CalculateIndex(row, col);
+
+            if (mineSweeperObj->MineField[index].TileStatus == TileStatus_Unopened)
+            {
+                cellArr[index]->setPixmap(unopened);
+            }
+            else if (mineSweeperObj->MineField[index].TileStatus == TileStatus_Flagged)
+            {
+                cellArr[index]->setPixmap(flagged);
+            }
+            else if (mineSweeperObj->MineField[index].TileStatus == TileStatus_Opened)
+            {
+                if (mineSweeperObj->MineField[index].MineStatus == MineStatus_Exist)
+                {
+                    cellArr[index]->setPixmap(bomb);
+                }
+                else if (mineSweeperObj->MineField[index].MineStatus == MineStatus_NotExist)
+                {
+                    qint32 adjacentMineCount = mineSweeperObj->FindAdjacentMineCount(row, col);
+                    switch (adjacentMineCount)
+                    {
+                        case 0:
+                        {
+                            cellArr[index]->setPixmap(openedEmpty);
+                            break;
+                        }
+                        case 1:
+                        {
+                            cellArr[index]->setPixmap(one);
+                            break;
+                        }
+                        case 2:
+                        {
+                            cellArr[index]->setPixmap(two);
+                            break;
+                        }
+                        case 3:
+                        {
+                            cellArr[index]->setPixmap(three);
+                            break;
+                        }
+                        case 4:
+                        {
+                            cellArr[index]->setPixmap(four);
+                            break;
+                        }
+                        case 5:
+                        {
+                            cellArr[index]->setPixmap(five);
+                            break;
+                        }
+                        case 6:
+                        {
+                            cellArr[index]->setPixmap(six);
+                            break;
+                        }
+                        case 7:
+                        {
+                            cellArr[index]->setPixmap(seven);
+                            break;
+                        }
+                        case 8:
+                        {
+                            cellArr[index]->setPixmap(eight);
+                            break;
+                        }
+                        default:
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 void MineSweeperWidgetCls::handleCellLeftClicked()
 {
-    QPixmap pix = QPixmap(TILE_OPENED_EMPTY);
-
     ClickableLabel* cell = qobject_cast<ClickableLabel*>(sender());
-
-    cell->setPixmap(pix);
-
-    //mineSweeperObj->ProcessUserInput()
+    mineSweeperObj->ProcessUserInput(cell->row, cell->col, UserAction_Open);
+    processMineField();
 }
 
 void MineSweeperWidgetCls::handleCellRightClicked()
 {
-    QPixmap pix = QPixmap(TILE_FLAGGED);
-
     ClickableLabel* cell = qobject_cast<ClickableLabel*>(sender());
-
-    cell->setPixmap(pix);
+    mineSweeperObj->ProcessUserInput(cell->row, cell->col, UserAction_Flag);
+    processMineField();
 }
 
 void MineSweeperWidgetCls::destroyCells()
@@ -151,6 +245,7 @@ void MineSweeperWidgetCls::handlePopupClicked(QListWidgetItem* item)
             if (cellArr != Q_NULLPTR)
             {
                 destroyCells();
+                mineSweeperObj->DestroyMineField();
             }
 
             createCells();
