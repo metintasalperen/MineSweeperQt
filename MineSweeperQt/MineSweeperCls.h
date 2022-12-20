@@ -19,7 +19,7 @@ public:
 private:
     // Allocates memory according to user defined mine field size
     // Initializes mine field
-    // 
+    //
     // Returns success if allocation successful
     // Returns error if allocation failed
     ResultEnum CreateMineField();
@@ -38,10 +38,7 @@ private:
     // If given cell does not contain mine, calculates neighbor mine count and set that cell to calculated number
     // If no neighbor contains mine, recursively opens all neighbors as well
     // If given cell has mine, then ends game
-    void OpenCell(unsigned int row, unsigned int column, bool firstIteration);
-
-    // Checks game status
-    GameStatusEnum CheckGameStatus();
+    void OpenCell(unsigned int row, unsigned int column, bool userClickedCell, bool openedClicked);
 
 public:
     // Default constructor
@@ -54,7 +51,7 @@ public:
     ResultEnum SetOptions(unsigned int row, unsigned int column, unsigned int mineCount);
 
     // Processes user input
-    GameStatusEnum ProcessUserInput(unsigned int row, unsigned int column, UserActionEnum userAction);
+    void ProcessUserInput(unsigned int row, unsigned int column, UserActionEnum userAction);
 
     // Maps 2d mine field array to 1d array
     unsigned int CalculateIndex(unsigned int row, unsigned int column);
@@ -64,6 +61,12 @@ public:
 
     // Deallocates memory when game ends
     void DestroyMineField();
+
+    // Checks game status
+    GameStatusEnum CheckGameStatus();
+
+    // Calculates flagged cell count
+    unsigned int CalculateFlagCount();
 };
 
 #endif

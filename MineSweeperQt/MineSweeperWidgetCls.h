@@ -7,9 +7,9 @@
 #include "MineSweeperCls.h"
 
 #include <QWidget>
-#include <QCheckBox>
 #include <QLabel>
 #include <QListWidget>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MineSweeperWidgetCls; }
@@ -29,27 +29,36 @@ private slots:
     void handlePopupClicked(QListWidgetItem* item);
     void handleCellLeftClicked();
     void handleCellRightClicked();
+    void timerUpdate();
 
 private:
     Ui::MineSweeperWidgetCls* ui;
 
-protected:
+    ClickableLabel** cellArr;
     QListWidget* popup;
+
+    MineSweeperCls* mineSweeperObj;
+
+    DifficultyEnum selectedDifficulty;
+
+    QTimer* timer;
+    bool isFirstClick;
+    quint32 secondsSinceStart;
+
+    quint32 mineCount;
+    quint32 cellCount;
+
 
     void adjustPopup();
     void resizeEvent(QResizeEvent* event);
     void moveEvent(QMoveEvent* event);
 
-    ClickableLabel** cellArr;
-
-public:
-    DifficultyEnum selectedDifficulty;
-    qint32 cellCount;
-    MineSweeperCls* mineSweeperObj;
-
-private:
     void createCells();
     void destroyCells();
-    void processMineField();
+
+    void printMineField();
+
+    void updateTimeCounter();
+    void updateMineCounter();
 };
 #endif // MINESWEEPERWIDGETCLS_H

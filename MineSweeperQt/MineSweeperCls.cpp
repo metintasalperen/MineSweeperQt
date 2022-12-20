@@ -1,9 +1,6 @@
 #include "MineSweeperCls.h"
-
-#include "ConstPkg.h"
 #include <new>
-#include <iostream>
-#include <cstdlib>
+#include <QRandomGenerator>
 
 // TL  T  TR
 //  \  |  /
@@ -12,7 +9,7 @@
 //   / | \
 //  /  |  \
 // BL  B  BR
-// 
+//
 // TL   -> Top Left     (row - 1, column - 1)
 // T    -> Top          (row - 1, column)
 // TR   -> Top Right    (row - 1, column + 1)
@@ -167,7 +164,7 @@ unsigned int MineSweeperCls::FindAdjacentMineCount(unsigned int row, unsigned in
         }
     }
     // Right but not corner
-    // Only check T, TL, L, BL, B 
+    // Only check T, TL, L, BL, B
     else if (column == MaxColumn - 1)
     {
         // Checking Top cell
@@ -493,7 +490,7 @@ unsigned int MineSweeperCls::FindAdjacentFlagCount(unsigned int row, unsigned in
         }
     }
     // Right but not corner
-    // Only check T, TL, L, BL, B 
+    // Only check T, TL, L, BL, B
     else if (column == MaxColumn - 1)
     {
         // Checking Top cell
@@ -675,6 +672,22 @@ unsigned int MineSweeperCls::FindAdjacentFlagCount(unsigned int row, unsigned in
     return flagCount;
 };
 
+unsigned int MineSweeperCls::CalculateFlagCount()
+{
+    unsigned int flagCount = 0;
+    unsigned int size = MaxColumn * MaxRow;
+
+    for (unsigned int i = 0; i < size; i++)
+    {
+        if (MineField[i].TileStatus == TileStatus_Flagged)
+        {
+            flagCount = flagCount + 1;
+        }
+    }
+
+    return flagCount;
+}
+
 MineSweeperCls::MineSweeperCls()
 {
     // Initialize data
@@ -684,6 +697,8 @@ MineSweeperCls::MineSweeperCls()
     MineCount = 0;
     FirstInput = true;
     MineField = nullptr;
+
+    QRandomGenerator::securelySeeded();
 };
 
 MineSweeperCls::~MineSweeperCls()
@@ -719,8 +734,10 @@ unsigned int MineSweeperCls::CalculateIndex(unsigned int row, unsigned int colum
 
 ResultEnum MineSweeperCls::CreateMineField()
 {
-    ResultEnum result = Result_Success;
     const unsigned int mineFieldSize = MaxRow * MaxColumn;
+    ResultEnum result = Result_Success;
+
+    DestroyMineField();
 
     TileStc* tileStc = new (std::nothrow) TileStc[mineFieldSize];
 
@@ -749,19 +766,18 @@ ResultEnum MineSweeperCls::CreateMineField()
 
 void MineSweeperCls::DestroyMineField()
 {
-    delete[] MineField;
-    MineField = nullptr;
+    if (MineField != nullptr)
+    {
+        delete[] MineField;
+        MineField = nullptr;
+    }
 }
 
-GameStatusEnum MineSweeperCls::ProcessUserInput(unsigned int row, unsigned int column, UserActionEnum userAction)
+void MineSweeperCls::ProcessUserInput(unsigned int row, unsigned int column, UserActionEnum userAction)
 {
-    // On user interface rows and columns are started at 1
-    // On memory it is started at 0
-    // Therefore when calling necessary functions row and column values are decremented.
-
     if (userAction == UserAction_Flag)
     {
-        FlagCell(row , column);
+        FlagCell(row, column);
     }
     else if (userAction == UserAction_Open)
     {
@@ -771,12 +787,10 @@ GameStatusEnum MineSweeperCls::ProcessUserInput(unsigned int row, unsigned int c
             PlaceMines(row, column);
         }
 
-        OpenCell(row, column, true);
+        OpenCell(row, column, true, false);
     }
 
     GameState = CheckGameStatus();
-
-    return GameState;
 };
 
 void MineSweeperCls::FlagCell(unsigned int row, unsigned int column)
@@ -809,7 +823,7 @@ void MineSweeperCls::PlaceMines(unsigned int row, unsigned int column)
 
         for (unsigned int i = 0; i < MineCount; i++)
         {
-            unsigned int randomMineLocation = rand() % size;
+            unsigned int randomMineLocation = QRandomGenerator::global()->generate() % size;
 
             if ((randomMineLocation == index) ||
                 (randomMineLocation == rightIndex) ||
@@ -839,7 +853,7 @@ void MineSweeperCls::PlaceMines(unsigned int row, unsigned int column)
 
         for (unsigned int i = 0; i < MineCount; i++)
         {
-            unsigned int randomMineLocation = rand() % size;
+            unsigned int randomMineLocation = QRandomGenerator::global()->generate() % size;
 
             if ((randomMineLocation == index) ||
                 (randomMineLocation == leftIndex) ||
@@ -869,7 +883,7 @@ void MineSweeperCls::PlaceMines(unsigned int row, unsigned int column)
 
         for (unsigned int i = 0; i < MineCount; i++)
         {
-            unsigned int randomMineLocation = rand() % size;
+            unsigned int randomMineLocation = QRandomGenerator::global()->generate() % size;
 
             if ((randomMineLocation == index) ||
                 (randomMineLocation == rightIndex) ||
@@ -899,7 +913,7 @@ void MineSweeperCls::PlaceMines(unsigned int row, unsigned int column)
 
         for (unsigned int i = 0; i < MineCount; i++)
         {
-            unsigned int randomMineLocation = rand() % size;
+            unsigned int randomMineLocation = QRandomGenerator::global()->generate() % size;
 
             if ((randomMineLocation == index) ||
                 (randomMineLocation == leftIndex) ||
@@ -931,7 +945,7 @@ void MineSweeperCls::PlaceMines(unsigned int row, unsigned int column)
 
         for (unsigned int i = 0; i < MineCount; i++)
         {
-            unsigned int randomMineLocation = rand() % size;
+            unsigned int randomMineLocation = QRandomGenerator::global()->generate() % size;
 
             if ((randomMineLocation == index) ||
                 (randomMineLocation == topIndex) ||
@@ -965,7 +979,7 @@ void MineSweeperCls::PlaceMines(unsigned int row, unsigned int column)
 
         for (unsigned int i = 0; i < MineCount; i++)
         {
-            unsigned int randomMineLocation = rand() % size;
+            unsigned int randomMineLocation = QRandomGenerator::global()->generate() % size;
 
             if ((randomMineLocation == index) ||
                 (randomMineLocation == topIndex) ||
@@ -999,7 +1013,7 @@ void MineSweeperCls::PlaceMines(unsigned int row, unsigned int column)
 
         for (unsigned int i = 0; i < MineCount; i++)
         {
-            unsigned int randomMineLocation = rand() % size;
+            unsigned int randomMineLocation = QRandomGenerator::global()->generate() % size;
 
             if ((randomMineLocation == index) ||
                 (randomMineLocation == leftIndex) ||
@@ -1033,7 +1047,7 @@ void MineSweeperCls::PlaceMines(unsigned int row, unsigned int column)
 
         for (unsigned int i = 0; i < MineCount; i++)
         {
-            unsigned int randomMineLocation = rand() % size;
+            unsigned int randomMineLocation = QRandomGenerator::global()->generate() % size;
 
             if ((randomMineLocation == index) ||
                 (randomMineLocation == leftIndex) ||
@@ -1070,7 +1084,7 @@ void MineSweeperCls::PlaceMines(unsigned int row, unsigned int column)
 
         for (unsigned int i = 0; i < MineCount; i++)
         {
-            unsigned int randomMineLocation = rand() % size;
+            unsigned int randomMineLocation = QRandomGenerator::global()->generate() % size;
 
             if ((randomMineLocation == index) ||
                 (randomMineLocation == leftIndex) ||
@@ -1096,7 +1110,7 @@ void MineSweeperCls::PlaceMines(unsigned int row, unsigned int column)
     }
 };
 
-void MineSweeperCls::OpenCell(unsigned int row, unsigned int column, bool firstIteration)
+void MineSweeperCls::OpenCell(unsigned int row, unsigned int column, bool userClickedCell, bool openedClicked)
 {
     unsigned int index = CalculateIndex(row, column);
 
@@ -1105,7 +1119,7 @@ void MineSweeperCls::OpenCell(unsigned int row, unsigned int column, bool firstI
         if (MineField[index].MineStatus == MineStatus_Exist)
         {
             // Only open mined cell if user is clicked on it
-            if (firstIteration == true)
+            if (userClickedCell == true || openedClicked == true)
             {
                 MineField[index].TileStatus = TileStatus_Opened;
             }
@@ -1121,77 +1135,77 @@ void MineSweeperCls::OpenCell(unsigned int row, unsigned int column, bool firstI
             {
                 if ((row > 0) && (column > 0))
                 {
-                    OpenCell(row - 1, column - 1, false);
+                    OpenCell(row - 1, column - 1, false, false);
                 }
                 if (row > 0)
                 {
-                    OpenCell(row - 1, column, false);
+                    OpenCell(row - 1, column, false, false);
                 }
                 if ((row > 0) && (column < MaxColumn - 1))
                 {
-                    OpenCell(row - 1, column + 1, false);
+                    OpenCell(row - 1, column + 1, false, false);
                 }
                 if (column > 0)
                 {
-                    OpenCell(row, column - 1, false);
+                    OpenCell(row, column - 1, false, false);
                 }
                 if (column < MaxColumn - 1)
                 {
-                    OpenCell(row, column + 1, false);
+                    OpenCell(row, column + 1, false, false);
                 }
                 if ((row < MaxRow - 1) && (column > 0))
                 {
-                    OpenCell(row + 1, column - 1, false);
+                    OpenCell(row + 1, column - 1, false, false);
                 }
                 if (row < MaxRow - 1)
                 {
-                    OpenCell(row + 1, column, false);
+                    OpenCell(row + 1, column, false, false);
                 }
                 if ((row < MaxRow - 1) && (column < MaxColumn - 1))
                 {
-                    OpenCell(row + 1, column + 1, false);
+                    OpenCell(row + 1, column + 1, false, false);
                 }
             }
         }
     }
-    else if ((MineField[index].TileStatus == TileStatus_Opened) && (firstIteration == true))
+    else if ((MineField[index].TileStatus == TileStatus_Opened) && (userClickedCell == true))
     {
         unsigned int adjacentMineCount = FindAdjacentMineCount(row, column);
         unsigned int adjacentFlagCount = FindAdjacentFlagCount(row, column);
 
-        if (adjacentMineCount == adjacentFlagCount)
+        if ((adjacentMineCount == adjacentFlagCount) && (adjacentMineCount > 0))
         {
             if ((row > 0) && (column > 0))
             {
-                OpenCell(row - 1, column - 1, false);
+                OpenCell(row - 1, column - 1, false, true);
             }
             if (row > 0)
             {
-                OpenCell(row - 1, column, false);
+                OpenCell(row - 1, column, false, true);
             }
             if ((row > 0) && (column < MaxColumn - 1))
             {
-                OpenCell(row - 1, column + 1, false);
+                OpenCell(row - 1, column + 1, false, true);
             }
             if (column > 0)
             {
-                OpenCell(row, column - 1, false);
+                OpenCell(row, column - 1, false, true);
             }
             if (column < MaxColumn - 1)
             {
-                OpenCell(row, column + 1, false);
+                OpenCell(row, column + 1, false, true);
             }
             if ((row < MaxRow - 1) && (column > 0))
             {
-                OpenCell(row + 1, column - 1, false);
+                OpenCell(row + 1, column - 1, false, true);
             }
             if (row < MaxRow - 1)
             {
-                OpenCell(row + 1, column, false);
+                OpenCell(row + 1, column, false, true);
             }
             if ((row < MaxRow - 1) && (column < MaxColumn - 1))
             {
-                OpenCell(row + 1, column + 1, false);
+                OpenCell(row + 1, column + 1, false, true);
             }
         }
     }

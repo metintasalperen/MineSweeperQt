@@ -62,5 +62,8 @@ const QString COUNTER_SEVEN = ":/numbers/numbers/7.png";
 const QString COUNTER_EIGHT = ":/numbers/numbers/8.png";
 const QString COUNTER_NINE = ":/numbers/numbers/9.png";
 
+// Time
+const qint32 ONE_SEC_IN_MSEC = 1000;
+
 
 #endif // CONSTPKG_H
